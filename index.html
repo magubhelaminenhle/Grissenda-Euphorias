@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Grissenda Euphorias | Olfactory Atelier - ZAR</title>
+    <!-- Google Fonts & simple CSS reset -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #fef7f2;
+            color: #2c241a;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header & branding */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f0e0d0;
+            padding-bottom: 1rem;
+        }
+        .brand h1 {
+            font-size: 1.9rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #a55d35, #d9a066);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .brand p {
+            font-size: 0.85rem;
+            color: #7a5a48;
+        }
+        .cart-icon {
+            background: white;
+            border-radius: 60px;
+            padding: 0.6rem 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #eedbcb;
+            font-weight: 500;
+        }
+        .cart-icon i {
+            color: #b96f30;
+            margin-right: 8px;
+        }
+        .cart-icon:hover {
+            background: #fff4ec;
+            border-color: #d6aa82;
+        }
+
+        /* grid layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        @media (max-width: 950px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1.8rem;
+            }
+        }
+
+        /* cards */
+        .card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+            padding: 1.4rem 1.6rem;
+            transition: 0.1s;
+            border: 1px solid #f0e3d8;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #d9a066;
+            padding-left: 12px;
+        }
+        .products-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0e2d6;
+            padding: 0.6rem 0;
+        }
+        .product-info h4 {
+            font-weight: 600;
+        }
+        .product-info p {
+            font-size: 0.8rem;
+            color: #9b7a62;
+        }
+        .price {
+            font-weight: 700;
+            color: #a55d35;
+        }
+        .add-to-cart {
+            background: #f4e8df;
+            border: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .add-to-cart:hover {
+            background: #e2cfbf;
+        }
+
+        /* cart table */
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .cart-table th, .cart-table td {
+            text-align: left;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0e2d6;
+        }
+        .cart-total {
+            text-align: right;
+            font-weight: 700;
+            margin-top: 0.8rem;
+            font-size: 1.1rem;
+        }
+        .btn-checkout {
+            background: #a55d35;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+        .btn-checkout:disabled {
+            background: #cdb6a4;
+            cursor: not-allowed;
+        }
+        .remove-item {
+            color: #bc6f45;
+            cursor: pointer;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
+
+        /* orders table */
+        .orders-table-wrapper {
+            overflow-x: auto;
+        }
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        .orders-table th, .orders-table td {
+            padding: 0.7rem 0.4rem;
+            border-bottom: 1px solid #f0e2d6;
+            text-align: left;
+        }
+        .status-collected {
+            background: #e2f0e6;
+            color: #2c6e3c;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.7rem;
+            display: inline-block;
+        }
+        .status-pending {
+            background: #fff0db;
+            color: #b9631c;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+        }
+        .badge-method {
+            font-size: 0.7rem;
+            background: #f5ede6;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+        }
+        .action-btn {
+            background: none;
+            border: none;
+            color: #bc6f45;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .reviews-list, .returns-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .review-item, .return-item {
+            background: #fefaf6;
+            padding: 0.6rem;
+            border-radius: 16px;
+            border-left: 3px solid #d9a066;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+        }
+        .small-text {
+            font-size: 0.7rem;
+            color: #8f6e55;
+        }
+        .cancel-order {
+            color: #b1622e;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        hr {
+            margin: 1rem 0;
+            border-color: #f0e2d6;
+        }
+        .notification {
+            background: #e9f4e9;
+            padding: 0.6rem;
+            border-radius: 40px;
+            text-align: center;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        button {
+            background: none;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #b2927a;
+        }
+        .qty-btn {
+            background: #eee;
+            border: none;
+            width: 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 4px;
+        }
+        .qty-btn:hover {
+            background: #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="brand">
+            <h1>✨ Grissenda Euphorias</h1>
+            <p>artisanal perfumes · soulful scents · prices in ZAR</p>
+        </div>
+        <div class="cart-icon" id="openCartBtn">
+            <i class="fas fa-shopping-bag"></i> My Cart (<span id="cartCount">0</span>)
+        </div>
+    </div>
+
+    <!-- main dashboard: products + cart area -->
+    <div class="dashboard-grid">
+        <!-- left: Products & Customer Reviews & Returns & Cancellations -->
+        <div>
+            <!-- PRODUCTS SECTION with ZAR prices -->
+            <div class="card" style="margin-bottom: 1.6rem;">
+                <div class="card-title"><i class="fas fa-bottle-water"></i> Perfume Collection · ZAR</div>
+                <div class="products-list" id="productsContainer"></div>
+            </div>
+
+            <!-- CUSTOMER REVIEWS -->
+            <div class="card" style="margin-bottom: 1.6rem;">
+                <div class="card-title"><i class="fas fa-star"></i> Fragrance reviews</div>
+                <div id="reviewsList" class="reviews-list"></div>
+            </div>
+
+            <!-- RETURNS & CANCELLATIONS combined info -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-undo-alt"></i> Returns & Cancellations</div>
+                <div id="returnsContainer" class="returns-list"></div>
+                <hr>
+                <div class="small-text"><i class="fas fa-info-circle"></i> Customers may cancel within 24h. Request cancellation from order row.</div>
+            </div>
+        </div>
+
+        <!-- right: Orders & Cart (dynamic) -->
+        <div>
+            <!-- CART PANEL (editable cart) -->
+            <div class="card" style="margin-bottom: 1.6rem;" id="cartPanel">
+                <div class="card-title"><i class="fas fa-shopping-cart"></i> Your Cart (ZAR)</div>
+                <div id="cartContents">
+                    <table class="cart-table" id="cartTable">
+                        <thead>
+                            <tr><th>Product</th><th>Price (ZAR)</th><th>Qty</th><th></th></tr>
+                        </thead>
+                        <tbody id="cartBody"></tbody>
+                    </table>
+                    <div class="cart-total" id="cartTotal">Total: R0.00</div>
+                    <button class="btn-checkout" id="checkoutBtn">Place Order →</button>
+                </div>
+            </div>
+
+            <!-- ALL ORDERS (with payment, collected status, cancellations) -->
+            <div class="card">
+                <div class="card-title"><i class="fas fa-truck"></i> Order Management</div>
+                <div class="orders-table-wrapper">
+                    <table class="orders-table">
+                        <thead>
+                            <tr><th>Order ID</th><th>Items</th><th>Total (ZAR)</th><th>Payment</th><th>Status</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="small-text" style="margin-top: 0.8rem;">✔ Click "Mark Collected" to update order status. Cancel order if not yet collected.</div>
+            </div>
+        </div>
+    </div>
+    <footer>Grissenda Euphorias — Where memory meets scent. Real-time order tracking & cart. All amounts in South African Rand (R).</footer>
+</div>
+
+<script>
+    // ---------- PRODUCT CATALOG with ZAR (South African Rand) ----------
+    const products = [
+        { id: 1, name: "Midnight Velvet", price: 1590.00, description: "Oud & dark rose · 50ml" },
+        { id: 2, name: "Saffron Ember", price: 2120.00, description: "Spicy saffron, leather · 100ml" },
+        { id: 3, name: "Gardenia Muse", price: 1350.00, description: "White floral, fresh · 50ml" },
+        { id: 4, name: "Santal Oasis", price: 1850.00, description: "Creamy sandalwood · 75ml" },
+        { id: 5, name: "Neroli Splendour", price: 1180.00, description: "Citrus & honey · 50ml" }
+    ];
+
+    // ---------- MOCK INITIAL DATA: orders, reviews, returns (also cancellations tracked inside orders) with ZAR amounts ----------
+    let orders = [
+        { id: "ORD-1001", items: [{ name: "Midnight Velvet", qty: 1, price: 1590 }], total: 1590, paymentMethod: "Credit Card", collected: false, cancelled: false, cancelRequested: false },
+        { id: "ORD-1002", items: [{ name: "Santal Oasis", qty: 2, price: 1850 }], total: 3700, paymentMethod: "PayPal", collected: true, cancelled: false, cancelRequested: false },
+        { id: "ORD-1003", items: [{ name: "Neroli Splendour", qty: 1, price: 1180 }, { name: "Saffron Ember", qty: 1, price: 2120 }], total: 3300, paymentMethod: "Bank Transfer", collected: false, cancelled: false, cancelRequested: false }
+    ];
+
+    // customer reviews
+    let reviews = [
+        { customer: "Elena R.", rating: 5, comment: "Midnight Velvet is pure elegance, lasts all day!", product: "Midnight Velvet" },
+        { customer: "Marcus L.", rating: 4, comment: "Santal Oasis is creamy perfection. Would buy again.", product: "Santal Oasis" },
+        { customer: "Clara D.", rating: 5, comment: "Gardenia Muse gives me compliments everywhere!", product: "Gardenia Muse" },
+        { customer: "Thabo M.", rating: 5, comment: "Saffron Ember is incredible value for the quality!", product: "Saffron Ember" }
+    ];
+
+    // returns data (mock)
+    let returnsList = [
+        { orderId: "ORD-1002", reason: "Changed mind, unopened", status: "Return approved", product: "Santal Oasis" },
+        { orderId: "ORD-1001", reason: "Allergic reaction", status: "Processing return", product: "Midnight Velvet" }
+    ];
+
+    // CART STATE
+    let cart = []; // each element: { productId, name, price, quantity }
+
+    // helper to update UI everywhere
+    function renderAll() {
+        renderProducts();
+        renderCart();
+        renderOrders();
+        renderReviews();
+        renderReturnsCancellations();
+        updateCartCountBadge();
+    }
+
+    function renderProducts() {
+        const container = document.getElementById('productsContainer');
+        if(!container) return;
+        container.innerHTML = '';
+        products.forEach(prod => {
+            const prodDiv = document.createElement('div');
+            prodDiv.className = 'product-item';
+            prodDiv.innerHTML = `
+                <div class="product-info">
+                    <h4>${prod.name}</h4>
+                    <p>${prod.description}</p>
+                </div>
+                <div style="text-align:right;">
+                    <div class="price">R ${prod.price.toFixed(2)}</div>
+                    <button class="add-to-cart" data-id="${prod.id}" data-name="${prod.name}" data-price="${prod.price}"><i class="fas fa-plus"></i> Add</button>
+                </div>
+            `;
+            container.appendChild(prodDiv);
+        });
+        // attach add to cart events
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.dataset.id);
+                const name = btn.dataset.name;
+                const price = parseFloat(btn.dataset.price);
+                addToCart(id, name, price);
+            });
+        });
+    }
+
+    function addToCart(id, name, price) {
+        const existing = cart.find(item => item.productId === id);
+        if(existing) {
+            existing.quantity += 1;
+        } else {
+            cart.push({ productId: id, name: name, price: price, quantity: 1 });
+        }
+        renderCart();
+        renderAll(); // refresh count & totals
+        showTemporaryNotification(`✨ ${name} added to cart · R ${price.toFixed(2)}`);
+    }
+
+    function renderCart() {
+        const cartBody = document.getElementById('cartBody');
+        const cartTotalSpan = document.getElementById('cartTotal');
+        if(!cartBody) return;
+        if(cart.length === 0) {
+            cartBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:1rem;">Your cart is empty. Add some perfume!</td></tr>';
+            if(cartTotalSpan) cartTotalSpan.innerText = `Total: R0.00`;
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            if(checkoutBtn) checkoutBtn.disabled = true;
+            return;
+        }
+        let total = 0;
+        cartBody.innerHTML = '';
+        cart.forEach((item, idx) => {
+            const subtotal = item.price * item.quantity;
+            total += subtotal;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.name}</td>
+                <td>R ${item.price.toFixed(2)}</td>
+                <td>
+                    <button class="qty-btn" data-index="${idx}" data-delta="-1" style="background:#eee; border:none; width:24px; border-radius:30px; cursor:pointer;">-</button>
+                    ${item.quantity}
+                    <button class="qty-btn" data-index="${idx}" data-delta="1" style="background:#eee; border:none; width:24px; border-radius:30px; cursor:pointer;">+</button>
+                </td>
+                <td><span class="remove-item" data-index="${idx}" style="color:#bc6f45; cursor:pointer;"><i class="fas fa-trash-alt"></i> Remove</span></td>
+            `;
+            cartBody.appendChild(row);
+        });
+        if(cartTotalSpan) cartTotalSpan.innerText = `Total: R ${total.toFixed(2)}`;
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        if(checkoutBtn) checkoutBtn.disabled = false;
+
+        // attach quantity buttons & remove
+        document.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.index);
+                const delta = parseInt(btn.dataset.delta);
+                if(cart[idx]) {
+                    let newQty = cart[idx].quantity + delta;
+                    if(newQty <= 0) {
+                        cart.splice(idx, 1);
+                    } else {
+                        cart[idx].quantity = newQty;
+                    }
+                    renderAll();
+                }
+            });
+        });
+        document.querySelectorAll('.remove-item').forEach(rm => {
+            rm.addEventListener('click', (e) => {
+                const idx = parseInt(rm.dataset.index);
+                cart.splice(idx, 1);
+                renderAll();
+            });
+        });
+    }
+
+    function updateCartCountBadge() {
+        const totalQty = cart.reduce((sum, i) => sum + i.quantity, 0);
+        const cartCountSpan = document.getElementById('cartCount');
+        if(cartCountSpan) cartCountSpan.innerText = totalQty;
+    }
+
+    function showTemporaryNotification(msg) {
+        let notif = document.querySelector('.temp-notification');
+        if(notif) notif.remove();
+        const div = document.createElement('div');
+        div.className = 'notification temp-notification';
+        div.style.position = 'fixed';
+        div.style.bottom = '20px';
+        div.style.left = '20px';
+        div.style.zIndex = '999';
+        div.style.backgroundColor = '#2c241a';
+        div.style.color = '#fef0e4';
+        div.style.padding = '10px 18px';
+        div.style.borderRadius = '40px';
+        div.style.fontSize = '0.8rem';
+        div.innerText = msg;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 2500);
+    }
+
+    // PLACE ORDER from cart
+    function placeOrderFromCart() {
+        if(cart.length === 0) {
+            alert("Your cart is empty. Please add some perfumes first!");
+            return;
+        }
+        // ask payment method
+        const paymentMethod = prompt("Select payment method:\n- Credit Card\n- PayPal\n- Bank Transfer\n- Cash on Delivery\n- SnapScan / Zapper", "Credit Card");
+        if(!paymentMethod) return;
+        const methodValid = paymentMethod.trim();
+        if(methodValid === "") return;
+
+        const itemsOrder = cart.map(item => ({ name: item.name, qty: item.quantity, price: item.price }));
+        const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+        const newOrderId = "ORD-" + (Math.floor(Math.random() * 9000) + 1000);
+        const newOrder = {
+            id: newOrderId,
+            items: itemsOrder,
+            total: totalAmount,
+            paymentMethod: methodValid,
+            collected: false,
+            cancelled: false,
+            cancelRequested: false
+        };
+        orders.unshift(newOrder); // newest first
+        // clear cart
+        cart = [];
+        renderAll();
+        showTemporaryNotification(`✅ Order ${newOrderId} placed! Total R ${totalAmount.toFixed(2)} via ${methodValid}`);
+    }
+
+    // Mark order as collected
+    function markCollected(orderId) {
+        const order = orders.find(o => o.id === orderId);
+        if(order && !order.cancelled) {
+            order.collected = true;
+            renderOrders();
+            showTemporaryNotification(`📦 Order ${orderId} marked as COLLECTED. Thank you!`);
+        } else if(order && order.cancelled) {
+            alert("Cannot collect a cancelled order.");
+        } else {
+            alert("Order not found.");
+        }
+    }
+
+    // Cancel order logic (if not collected & not already cancelled)
+    function cancelOrder(orderId) {
+        const order = orders.find(o => o.id === orderId);
+        if(!order) return;
+        if(order.collected) {
+            alert("Order already collected — cannot cancel. Please visit our returns desk or contact support for returns.");
+            return;
+        }
+        if(order.cancelled) {
+            alert("Order already cancelled.");
+            return;
+        }
+        const confirmCancel = confirm(`⚠️ Cancel order ${orderId}? (Total R ${order.total.toFixed(2)} will be refunded to ${order.paymentMethod})`);
+        if(confirmCancel) {
+            order.cancelled = true;
+            renderOrders();
+            renderReturnsCancellations(); 
+            showTemporaryNotification(`❌ Order ${orderId} has been cancelled. Refund initiated.`);
+        }
+    }
+
+    function renderOrders() {
+        const tbody = document.getElementById('ordersTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = '';
+        if(orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No orders yet. Place your first order!</td></tr>';
+            return;
+        }
+        orders.forEach(order => {
+            const row = tbody.insertRow();
+            const itemsShort = order.items.map(it => `${it.name} (x${it.qty})`).join(', ');
+            const statusHtml = order.cancelled ? '<span class="status-pending" style="background:#e9d8cf;">CANCELLED</span>' : (order.collected ? '<span class="status-collected">Collected ✓</span>' : '<span class="status-pending">Pending collection</span>');
+            const paymentHtml = `<span class="badge-method">${order.paymentMethod}</span>`;
+            const actionsHtml = !order.cancelled ? 
+                (!order.collected ? 
+                    `<button class="action-btn" data-order="${order.id}" data-action="collect"><i class="fas fa-check-circle"></i> Mark Collected</button> 
+                     <button class="action-btn" data-order="${order.id}" data-action="cancel" style="margin-left:8px;"><i class="fas fa-ban"></i> Cancel</button>` 
+                    : `<span style="color:#689f38;"><i class="fas fa-check"></i> Collected</span>`) 
+                : `<span style="color:#a55d35;">Cancelled</span>`;
+            row.innerHTML = `
+                <td style="font-weight:500;">${order.id}</td>
+                <td style="max-width:200px; font-size:0.75rem;">${itemsShort.substring(0, 70)}${itemsShort.length>70 ? '…' : ''}</td>
+                <td><strong>R ${order.total.toFixed(2)}</strong></td>
+                <td>${paymentHtml}</td>
+                <td>${statusHtml}</td>
+                <td>${actionsHtml}</td>
+            `;
+        });
+        // attach event listeners after rendering
+        document.querySelectorAll('[data-action="collect"]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const orderId = btn.dataset.order;
+                markCollected(orderId);
+            });
+        });
+        document.querySelectorAll('[data-action="cancel"]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const orderId = btn.dataset.order;
+                cancelOrder(orderId);
+            });
+        });
+    }
+
+    function renderReviews() {
+        const container = document.getElementById('reviewsList');
+        if(!container) return;
+        if(reviews.length === 0) {
+            container.innerHTML = '<div class="small-text">No reviews yet. Be the first to share your scent story!</div>';
+            return;
+        }
+        container.innerHTML = reviews.map(rev => `
+            <div class="review-item">
+                <div class="flex-between"><strong>${rev.customer}</strong> <span>⭐ ${rev.rating}/5</span></div>
+                <div><i>“${rev.comment}”</i> — ${rev.product}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderReturnsCancellations() {
+        const container = document.getElementById('returnsContainer');
+        if(!container) return;
+        let content = '';
+        // show returns from returnsList
+        if(returnsList.length) {
+            content += `<div><strong>🔄 Active returns</strong></div>`;
+            returnsList.forEach(ret => {
+                content += `<div class="return-item"><strong>Order ${ret.orderId}</strong> — ${ret.product}<br>${ret.reason} <span class="small-text">[${ret.status}]</span></div>`;
+            });
+        } else {
+            content += `<div class="small-text">No open returns at the moment.</div>`;
+        }
+        // also show cancelled orders from orders list for transparency
+        const cancelledOrders = orders.filter(o => o.cancelled === true);
+        if(cancelledOrders.length) {
+            content += `<div style="margin-top:12px;"><strong>❌ Cancelled orders (refunded)</strong></div>`;
+            cancelledOrders.forEach(co => {
+                content += `<div class="return-item">Order ${co.id} — total R ${co.total.toFixed(2)} (cancelled)</div>`;
+            });
+        } else {
+            content += `<div class="small-text" style="margin-top:8px;">No recent cancellations.</div>`;
+        }
+        container.innerHTML = content;
+    }
+
+    // open cart drawer? we just scroll to cart panel (simple)
+    document.getElementById('openCartBtn')?.addEventListener('click', () => {
+        document.getElementById('cartPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    document.getElementById('checkoutBtn')?.addEventListener('click', () => {
+        placeOrderFromCart();
+    });
+
+    // initial load
+    renderAll();
+</script>
+</body>
+</html>
